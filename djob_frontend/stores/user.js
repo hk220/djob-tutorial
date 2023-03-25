@@ -4,7 +4,7 @@ export const useUserStore = defineStore({
     id: 'user',
     state: () => ({
         user: {
-            isAuthenticated: true,
+            isAuthenticated: false,
             email: null,
             token: null,
         }
