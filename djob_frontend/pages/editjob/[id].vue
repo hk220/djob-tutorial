@@ -13,6 +13,7 @@ onMounted(() => {
 })
 
 const { data: job } = await useFetch('http://127.0.0.1:8000/api/v1/jobs/' + route.params.id + '/')
+console.log('job:', job)
 
 let title = ref(job.value.title)
 let description = ref(job.value.description)

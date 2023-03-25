@@ -27,6 +27,7 @@ class JobsDetailSerializer(serializers.ModelSerializer):
         model = Job
         fields = (
             'id',
+            'category',
             'title',
             'description',
             'position_salary',

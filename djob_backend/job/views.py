@@ -52,13 +52,10 @@ class CreateJobView(APIView):
     def put(self, request, pk):
         job = Job.objects.get(pk=pk, created_by=request.user)
         form = JobForm(request.data, instance=job)
-        if form.is_valid():
-            form.save()
+        form.save()
 
-            return Response({'status': 'updated'})
-        else:
-            return Response({'status': 'errors', 'errors': form.errors})
-    
+        return Response({'status': 'updated'})
+
     def delete(self, request, pk):
         job = Job.objects.get(pk=pk, created_by=request.user)
         job.delete()

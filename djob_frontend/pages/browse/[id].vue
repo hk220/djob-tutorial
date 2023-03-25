@@ -1,7 +1,13 @@
 <script setup>
-    const route = useRoute()
+const route = useRoute()
 
-    const { data: job } = await useFetch('http://127.0.0.1:8000/api/v1/jobs/' + route.params.id + '/')
+const { data: job } = await useFetch('http://127.0.0.1:8000/api/v1/jobs/' + route.params.id + '/')
+
+useSeoMeta({
+    title: job.value.title,
+    ogTitle: job.value.title,
+    description: job.value.description,
+})
 </script>
 
 <template>
