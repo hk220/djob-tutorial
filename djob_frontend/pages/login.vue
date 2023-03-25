@@ -20,7 +20,7 @@ async function submitForm() {
             password: password.value
         }
     })
-    .then(response => {
+    .then(data => {
         console.log('response', data.auth_token)
 
         userStore.setToken(data.auth_token, email.value)

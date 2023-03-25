@@ -4,23 +4,23 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 const router = useRouter()
+const route = useRoute()
 
 onMounted(() => {
     if (!userStore.user.isAuthenticated) {
-        router.push('/logout')
+        router.push('/login')
     }
 })
 
-let {data: jobCategories} = await useFetch('http://127.0.0.1:8000/api/v1/jobs/categories/')
+const { data: job } = await useFetch('http://127.0.0.1:8000/api/v1/jobs/' + route.params.id + '/')
 
-let category = ref('')
-let title = ref('')
-let description = ref('')
-let position_salary = ref('')
-let position_location = ref('')
-let company_name = ref('')
-let company_location = ref('')
-let company_email = ref('')
+let title = ref(job.value.title)
+let description = ref(job.value.description)
+let position_salary = ref(job.value.position_salary)
+let position_location = ref(job.value.position_location)
+let company_name = ref(job.value.company_name)
+let company_location = ref(job.value.company_location)
+let company_email = ref(job.value.company_email)
 let errors = ref([])
 
 async function submitForm() {
@@ -28,7 +28,6 @@ async function submitForm() {
 
     errors.value = []
 
-    if (category.value == '') { errors.value.push('You must select a category')}
     if (title.value == '') { errors.value.push('The title field is missing')}
     if (description.value == '') { errors.value.push('The description field is missing')}
     if (position_salary.value == '') { errors.value.push('The position salary field is missing')}
@@ -38,14 +37,14 @@ async function submitForm() {
     if (company_email.value == '') { errors.value.push('The company email field is missing')}
 
     if (errors.value.length == 0) {
-        await $fetch('http://127.0.0.1:8000/api/v1/jobs/create/', {
-            method: 'POST',
+        await $fetch('http://127.0.0.1:8000/api/v1/jobs/' + route.params.id + '/edit/', {
+            method: 'PUT',
             headers: {
                 'Authorization': 'token ' + userStore.user.token,
                 'Content-Type': 'application/json'
             },
             body: {
-                category: category.value,
+                category: job.value.category,
                 title: title.value,
                 description: description.value,
                 position_salary: position_salary.value,
@@ -75,27 +74,11 @@ async function submitForm() {
     }
 }
 </script>
-
 <template>
     <div class="py-10 px-6">
-        <h1 class="mb-6 text-2xl">Create job</h1>
+        <h1 class="mb-6 text-2xl">Edit job</h1>
 
         <form v-on:submit.prevent="submitForm" class="space-y-4">
-            <div>
-                <label>Category</label>
-
-                <select v-model="category" class="w-full mt-2 p-4 rounded-xl bg-gray-100">
-                    <option value="">Select category</option>
-                    <option
-                        v-for="category in jobCategories"
-                        v-bind:key="category.id"
-                        v-bind:value="category.id"
-                    >
-                        {{ category.title }}
-                    </option>
-                </select>
-            </div>
-
             <div>
                 <label>Title</label>
                 <input type="text" v-model="title" class="w-full mt-2 p-4 rounded-xl bg-gray-100">
@@ -141,7 +124,7 @@ async function submitForm() {
                 </p>
             </div>
 
-            <button class="py-4 px-6 bg-teal-700 text-white rounded-xl">Submit</button>
+            <button class="py-4 px-6 bg-teal-700 text-white rounded-xl">Save changes</button>
         </form>
     </div>
 </template>
